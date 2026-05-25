@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery | InAmigos Foundation</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Lightbox Modal */
+      .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        animation: fadeIn 0.3s ease;
+      }
+
+      .lightbox.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .lightbox-content {
+        position: relative;
+        background: var(--white);
+        border-radius: 12px;
+        max-width: 90vw;
+        max-height: 90vh;
+        overflow: hidden;
+        animation: zoomIn 0.3s ease;
+      }
+
+      .lightbox-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .lightbox-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        transition: all 0.25s ease;
+      }
+
+      .lightbox-close:hover {
+        background: var(--white);
+        transform: scale(1.1);
+      }
+
+      .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        transition: all 0.25s ease;
+        z-index: 10;
+      }
+
+      .lightbox-nav:hover {
+        background: var(--white);
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      .lightbox-prev {
+        left: 20px;
+      }
+
+      .lightbox-next {
+        right: 20px;
+      }
+
+      /* Gallery filters removed */
+
+      /* Masonry Gallery */
+      .gallery-masonry {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+        margin-bottom: 48px;
+      }
+
+      .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px;
+        cursor: pointer;
+        background: var(--gray);
+        height: 280px;
+        animation: fadeInScale 0.5s ease;
+        box-shadow: 0 8px 24px rgba(31, 42, 34, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .gallery-item:nth-child(2) {
+        grid-column: span 2;
+        height: 300px;
+      }
+
+      .gallery-item:nth-child(4) {
+        grid-column: span 2;
+      }
+
+      .gallery-item:nth-child(5) {
+        height: 300px;
+      }
+
+      .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.35s ease, filter 0.35s ease;
+      }
+
+      .gallery-item:hover img {
+        transform: scale(1.08);
+        filter: brightness(0.9);
+      }
+
+      .gallery-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(46, 139, 87, 0.2), rgba(156, 204, 101, 0.2));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        display: flex;
+        align-items: flex-end;
+        padding: 20px;
+        color: var(--white);
+        font-weight: 700;
+      }
+
+      .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+      }
+
+      .gallery-category {
+        display: inline-block;
+        background: rgba(46, 139, 87, 0.8);
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        backdrop-filter: blur(10px);
+      }
+
+      /* Filter Animations */
+      @keyframes fadeInScale {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes zoomIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* Hidden state for filter */
+      .gallery-item.hidden {
+        display: none;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .gallery-masonry {
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 12px;
+        }
+
+        .gallery-item:nth-child(2),
+        .gallery-item:nth-child(4) {
+          grid-column: span 1;
+        }
+
+        .gallery-filters {
+          gap: 8px;
+        }
+
+        .filter-btn {
+          padding: 8px 16px;
+          font-size: 0.85rem;
+        }
+
+        .lightbox-nav {
+          width: 40px;
+          height: 40px;
+          font-size: 1.2rem;
+        }
+
+        .lightbox-prev {
+          left: 10px;
+        }
+
+        .lightbox-next {
+          right: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="navbar">
+      <a class="brand" href="index.html" aria-label="InAmigos Foundation home">
+        <img src="src/assets/logo.jpg" alt="InAmigos Foundation logo" />
+        <span><strong>InAmigos</strong><small>Foundation</small></span>
+      </a>
+      <input class="nav-check" type="checkbox" id="nav-check" aria-label="Open navigation" />
+      <label class="menu-toggle" for="nav-check"><span></span></label>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="projects.html">Our Projects</a>
+        <a class="active" href="gallery.html">Gallery</a>
+        <a href="contact.html">Contact Us</a>
+        <!-- Join Us removed -->
+      </nav>
+    </header>
+
+    <main>
+      <section class="page-hero gallery-hero reveal" style="background: linear-gradient(90deg, rgba(7, 17, 12, 0.84) 0%, rgba(7, 17, 12, 0.58) 42%, rgba(7, 17, 12, 0.18) 100%), url('src/assets/hero.jpeg') center/cover;">
+        <div class="page-hero-content">
+          <h1>Gallery</h1>
+          <span class="title-line"></span>
+          <p>Moments of change, compassion and community.<br />A glimpse of our journey towards a better tomorrow.</p>
+        </div>
+      </section>
+
+      <section class="section gallery-page reveal">
+        <div class="section-heading" style="margin-bottom: 32px;">
+          <h2>Our Impact in Pictures</h2>
+          <span></span>
+        </div>
+
+        <!-- Gallery filters removed -->
+
+        <div class="gallery-masonry" id="galleryGrid">
+          <!-- pic1 -->
+          <div class="gallery-item" data-category="education">
+            <img src="src/assets/pic1.jpg" alt="Children in classroom learning" loading="lazy" />
+          </div>
+
+          <!-- pic2 -->
+          <div class="gallery-item" data-category="women">
+            <img src="src/assets/pic2.jpg" alt="Women empowerment workshop" loading="lazy" />
+          </div>
+
+          <!-- pic3 -->
+          <div class="gallery-item" data-category="animal">
+            <img src="src/assets/pic3.jpg" alt="Animal welfare and care program" loading="lazy" />
+          </div>
+
+          <!-- pic4 -->
+          <div class="gallery-item" data-category="environment">
+            <img src="src/assets/pic4.jpeg" alt="Environmental sustainability initiative" loading="lazy" />
+          </div>
+
+          <!-- pic5 -->
+          <div class="gallery-item" data-category="community">
+            <img src="src/assets/pic5.jpg" alt="Community service and support" loading="lazy" />
+          </div>
+
+          <!-- pic6 (picc6.jpg in workspace root) -->
+          <div class="gallery-item" data-category="education">
+            <img src="picc6.jpg" alt="Field education" loading="lazy" />
+          </div>
+
+          <!-- pic7 -->
+          <div class="gallery-item" data-category="environment">
+            <img src="pic7.png" alt="Plantation drive" loading="lazy" />
+          </div>
+
+          <!-- pic8 -->
+          <div class="gallery-item" data-category="community">
+            <img src="pic8.jpg" alt="Community outreach" loading="lazy" />
+          </div>
+
+          <!-- pic9 -->
+          <div class="gallery-item" data-category="animal">
+            <img src="pic9.jpg" alt="Animal rescue" loading="lazy" />
+          </div>
+
+          <!-- pic11 -->
+          <div class="gallery-item" data-category="education">
+            <img src="pic11.jpg" alt="Education milestone" loading="lazy" />
+          </div>
+        </div>
+      </section>
+
+      <section class="gallery-journey reveal">
+        <div class="journey-icon">H</div>
+        <div>
+          <h2>Be Part of Our Journey</h2>
+          <p>Together, we can create a better and kinder world.</p>
+        </div>
+        <div class="journey-media">
+          <img src="src/assets/grass.png" alt="" aria-hidden="true" />
+          <a class="contact-image-btn" href="contact.html">Contact Us</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+      <button class="lightbox-close" id="lightboxClose">✕</button>
+      <button class="lightbox-nav lightbox-prev" id="lightboxPrev">‹</button>
+      <div class="lightbox-content">
+        <img class="lightbox-image" id="lightboxImage" src="" alt="Gallery image" />
+      </div>
+      <button class="lightbox-nav lightbox-next" id="lightboxNext">›</button>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-grid">
+        <div>
+          <h2>InAmigos</h2>
+          <small>Foundation</small>
+          <p>Together, we can build a more inclusive, compassionate, and empowered society.</p>
+          <div class="socials">
+            <a href="https://instagram.com/inamigos?utm_medium=copy_link" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" /><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" /><circle cx="17.5" cy="6.5" r="1.1" /></svg></a>
+            <a href="https://www.facebook.com/109800320841732/posts/289306342891128/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8.5V7c0-1 .7-1.5 1.5-1.5H17V2.5h-2.1C11.9 2.5 10 4.2 10 7.1v1.4H8v3h2V21h4v-9.5h2.4l.6-3H14Z" /></svg></a>
+            <a href="https://www.linkedin.com/company/inamigos-foundation" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9H2v12h4V9Zm-2-2.8A2.2 2.2 0 1 0 4 1.8a2.2 2.2 0 0 0 0 4.4ZM22 21h-4v-6.3c0-1.7-.7-2.8-2.2-2.8-1.1 0-1.8.8-2.1 1.6-.1.3-.1.8-.1 1.2V21h-4V9h4v1.7c.5-.8 1.5-2 3.6-2 2.6 0 4.8 1.7 4.8 5.4V21Z" /></svg></a>
+            <a href="https://youtube.com/@inamigosfoundation4296" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.7 8.2a3 3 0 0 0-2.1-2.1C17.8 5.7 12 5.7 12 5.7s-5.8 0-7.6.4A3 3 0 0 0 2.3 8.2 31.6 31.6 0 0 0 2 12a31.6 31.6 0 0 0 .3 3.8 3 3 0 0 0 2.1 2.1c1.8.4 7.6.4 7.6.4s5.8 0 7.6-.4a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 22 12a31.6 31.6 0 0 0-.3-3.8ZM10 15.2V8.8L15.5 12 10 15.2Z" /></svg></a>
+          </div>
+          <p>inamigosfoundation@gmail.com</p>
+        </div>
+        <div><h3>About</h3><a href="about.html">Who we are</a><a href="about.html">Our work</a><a href="contact.html">Contact</a></div>
+        <div><h3>Events</h3><a href="projects.html">Campaigns</a><a href="gallery.html">Field visits</a><a href="contact.html">Volunteer drive</a></div>
+        <div><h3>Volunteers</h3><a href="contact.html">Become a volunteer</a><a href="contact.html">Donate support</a><a href="gallery.html">Stories</a></div>
+        <div><h3>Gallery</h3><a href="gallery.html">Education</a><a href="gallery.html">Women empowerment</a><a href="gallery.html">Community</a></div>
+        <div><h3>Blog</h3><a href="about.html">Updates</a><a href="projects.html">Impact notes</a><a href="contact.html">News</a></div>
+      </div>
+      <p class="copyright">Copyright 2024 InAmigos Foundation. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+      // Gallery filters removed — static gallery shown
+      const galleryItems = document.querySelectorAll('.gallery-item');
+
+      // Lightbox Functionality
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImage = document.getElementById('lightboxImage');
+      const lightboxClose = document.getElementById('lightboxClose');
+      const lightboxPrev = document.getElementById('lightboxPrev');
+      const lightboxNext = document.getElementById('lightboxNext');
+      let visibleItems = [];
+      let currentImageIndex = 0;
+
+      function updateVisibleItems() {
+        visibleItems = Array.from(galleryItems).filter(item => !item.classList.contains('hidden'));
+      }
+
+      galleryItems.forEach((item, index) => {
+        item.addEventListener('click', () => {
+          updateVisibleItems();
+          const img = item.querySelector('img');
+          const currentVisible = visibleItems.indexOf(item);
+          currentImageIndex = currentVisible;
+          
+          lightboxImage.src = img.src;
+          lightboxImage.alt = img.alt;
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      function showImage(index) {
+        if (visibleItems[index]) {
+          const img = visibleItems[index].querySelector('img');
+          lightboxImage.src = img.src;
+          lightboxImage.alt = img.alt;
+          currentImageIndex = index;
+        }
+      }
+
+      lightboxClose.addEventListener('click', () => {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      });
+
+      lightboxPrev.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex - 1 + visibleItems.length) % visibleItems.length;
+        showImage(currentImageIndex);
+      });
+
+      lightboxNext.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex + 1) % visibleItems.length;
+        showImage(currentImageIndex);
+      });
+
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+          lightbox.classList.remove('active');
+          document.body.style.overflow = 'auto';
+        }
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'ArrowLeft') lightboxPrev.click();
+        if (e.key === 'ArrowRight') lightboxNext.click();
+        if (e.key === 'Escape') lightboxClose.click();
+      });
+    </script>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
