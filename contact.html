@@ -46,6 +46,45 @@
         box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
       }
 
+      .form-group input.invalid,
+      .form-group textarea.invalid {
+        border-color: #ee4d5a;
+        box-shadow: 0 0 0 3px rgba(238, 77, 90, 0.1);
+      }
+
+      .field-error {
+        min-height: 18px;
+        margin-top: 6px;
+        color: #b4232e;
+        font-size: 0.84rem;
+        font-weight: 700;
+      }
+
+      .form-feedback {
+        display: none;
+        grid-column: 1 / -1;
+        padding: 14px 16px;
+        border-radius: 6px;
+        font-weight: 800;
+        line-height: 1.45;
+      }
+
+      .form-feedback.show {
+        display: block;
+      }
+
+      .form-feedback.success {
+        color: #0d4c2d;
+        background: #e7f6ec;
+        border: 1px solid rgba(46, 139, 87, 0.24);
+      }
+
+      .form-feedback.error {
+        color: #9f1f2a;
+        background: #fff1f2;
+        border: 1px solid rgba(238, 77, 90, 0.24);
+      }
+
       .form-group textarea {
         resize: vertical;
         min-height: 140px;
@@ -89,8 +128,19 @@
       .get-in-touch {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
+        align-items: start;
         gap: 24px;
         margin-bottom: 56px;
+      }
+
+      .get-in-touch .touch-card:nth-child(1) {
+        grid-row: 1 / span 3;
+      }
+
+      .get-in-touch .touch-card:nth-child(2),
+      .get-in-touch .touch-card:nth-child(3),
+      .get-in-touch .touch-card:nth-child(4) {
+        grid-column: 2;
       }
 
       .touch-card {
@@ -114,6 +164,39 @@
 
       .touch-card a {
         color: var(--green);
+        font-weight: 700;
+      }
+
+      /* Small map thumbnail in contact card */
+      .map-embed {
+        width: 100%;
+        height: 160px;
+        border: 1px solid rgba(31,42,34,0.06);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 12px;
+      }
+
+      .map-btn {
+        display:inline-block;
+        margin-top:8px;
+        padding:6px 12px;
+        background: linear-gradient(90deg,#1f6f45,#2e8b57);
+        color:#fff; border-radius:6px; text-decoration:none; font-weight:700;
+      }
+
+      .touch-card .map-btn,
+      .touch-card .map-btn:visited,
+      .touch-card .map-btn:hover,
+      .touch-card .map-btn:focus {
+        color: #ffffff;
+      }
+
+      .contact-action-note {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 0.86rem;
         font-weight: 700;
       }
 
@@ -180,11 +263,20 @@
           <div class="touch-card">
             <h3>📍 Address</h3>
             <p>Ward No. 5, Gram Post,<br />Sipat Ujwal Nagar,<br />Bilaspur, Chhattisgarh<br />Pin-Code: 495555</p>
+            <div class="map-embed" aria-hidden="false">
+              <iframe
+                title="InAmigos Foundation location map"
+                src="https://maps.google.com/maps?q=Ward%20No.%205%2C%20Gram%20Post%2C%20Sipat%20Ujwal%20Nagar%2C%20Bilaspur%2C%20Chhattisgarh%20495555&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                width="100%" height="160" style="border:0;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <a class="map-btn" href="https://www.google.com/maps/dir/?api=1&destination=Ward+No.+5,+Gram+Post,+Sipat+Ujwal+Nagar,+Bilaspur,+Chhattisgarh+495555" target="_blank" rel="noopener">Get Directions</a>
+            <span class="contact-action-note">Opens location access in Google Maps.</span>
           </div>
 
           <div class="touch-card">
             <h3>✉️ Email</h3>
             <p><a href="mailto:inamigosfoundation@gmail.com">inamigosfoundation@gmail.com</a></p>
+            <span class="contact-action-note">Click to send us an email.</span>
           </div>
 
           <div class="touch-card">
@@ -204,25 +296,30 @@
         </section>
 
         <div class="contact-form-wrapper">
-          <form class="contact-form">
+          <form class="contact-form" novalidate>
+            <div class="form-feedback" aria-live="polite"></div>
             <div class="form-group">
               <label for="name">Your Name <span style="color: #ee4d5a;">*</span></label>
               <input type="text" id="name" name="name" required />
+              <span class="field-error" data-error-for="name"></span>
             </div>
 
             <div class="form-group">
               <label for="email">Your Email <span style="color: #ee4d5a;">*</span></label>
               <input type="email" id="email" name="email" required />
+              <span class="field-error" data-error-for="email"></span>
             </div>
 
             <div class="form-group full">
               <label for="subject">Subject <span style="color: #ee4d5a;">*</span></label>
               <input type="text" id="subject" name="subject" required />
+              <span class="field-error" data-error-for="subject"></span>
             </div>
 
             <div class="form-group full">
               <label for="message">Your Message <span style="color: #ee4d5a;">*</span></label>
               <textarea id="message" name="message" required></textarea>
+              <span class="field-error" data-error-for="message"></span>
             </div>
 
             <div class="form-submit">
@@ -243,7 +340,7 @@
             <a href="https://instagram.com/inamigos?utm_medium=copy_link" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" /><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" /><circle cx="17.5" cy="6.5" r="1.1" /></svg></a>
             <a href="https://www.facebook.com/109800320841732/posts/289306342891128/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8.5V7c0-1 .7-1.5 1.5-1.5H17V2.5h-2.1C11.9 2.5 10 4.2 10 7.1v1.4H8v3h2V21h4v-9.5h2.4l.6-3H14Z" /></svg></a>
             <a href="https://www.linkedin.com/company/inamigos-foundation" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9H2v12h4V9Zm-2-2.8A2.2 2.2 0 1 0 4 1.8a2.2 2.2 0 0 0 0 4.4ZM22 21h-4v-6.3c0-1.7-.7-2.8-2.2-2.8-1.1 0-1.8.8-2.1 1.6-.1.3-.1.8-.1 1.2V21h-4V9h4v1.7c.5-.8 1.5-2 3.6-2 2.6 0 4.8 1.7 4.8 5.4V21Z" /></svg></a>
-            <a href="https://youtube.com/@inamigosfoundation4296" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.7 8.2a3 3 0 0 0-2.1-2.1C17.8 5.7 12 5.7 12 5.7s-5.8 0-7.6.4A3 3 0 0 0 2.3 8.2 31.6 31.6 0 0 0 2 12a31.6 31.6 0 0 0 .3 3.8 3 3 0 0 0 2.1 2.1c1.8.4 7.6.4 7.6.4s5.8 0 7.6-.4a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 22 12a31.6 31.6 0 0 0-.3-3.8ZM10 15.2V8.8L15.5 12 10 15.2Z" /></svg></a>
+            <a href="https://www.youtube.com/@inamigosfoundation" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.7 8.2a3 3 0 0 0-2.1-2.1C17.8 5.7 12 5.7 12 5.7s-5.8 0-7.6.4A3 3 0 0 0 2.3 8.2 31.6 31.6 0 0 0 2 12a31.6 31.6 0 0 0 .3 3.8 3 3 0 0 0 2.1 2.1c1.8.4 7.6.4 7.6.4s5.8 0 7.6-.4a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 22 12a31.6 31.6 0 0 0-.3-3.8ZM10 15.2V8.8L15.5 12 10 15.2Z" /></svg></a>
           </div>
           <p>inamigosfoundation@gmail.com</p>
         </div>
@@ -255,6 +352,6 @@
       </div>
       <p class="copyright">Copyright 2024 InAmigos Foundation. All Rights Reserved.</p>
     </footer>
-    <script type="module" src="script.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

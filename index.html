@@ -36,8 +36,8 @@
             empowerment, environment and community welfare.
           </p>
           <div class="hero-actions">
-            <a class="primary-btn" href="contact.html">Contact Us <span class="mini-icon">+</span></a>
-            <a class="secondary-btn" href="contact.html">Volunteer <span class="mini-icon">+</span></a>
+            <a class="primary-btn hero-cta hero-cta-primary" href="contact.html">Contact Us <span class="mini-icon">+</span></a>
+            <a class="secondary-btn hero-cta hero-cta-secondary" href="contact.html">Volunteer <span class="mini-icon">+</span></a>
           </div>
         </div>
       </section>
@@ -58,9 +58,11 @@
           <span></span>
         </div>
 
-        <div class="initiatives-scroll" aria-label="Our initiatives">
+        <div class="initiatives-carousel" aria-label="Our initiatives carousel">
+          <button class="carousel-nav" type="button" data-initiatives-prev aria-label="Show previous initiative">&lt;</button>
+          <div class="initiatives-scroll" data-initiatives-track aria-label="Our initiatives" tabindex="0">
           <article class="initiative-card">
-            <img src="pic5.jpg" alt="Project SEVA community support" loading="lazy" />
+            <img src="src/assets/pic5.jpg" alt="Project SEVA community support" loading="lazy" />
             <div class="initiative-content">
               <h3>Project SEVA</h3>
               <p>Over 50,000+ meals and clothing distributed to underprivileged communities, creating meaningful social support and improving lives.</p>
@@ -71,7 +73,7 @@
           </article>
 
           <article class="initiative-card">
-            <img src="pic1.jpg" alt="Project BACHPANSHALA education support" loading="lazy" />
+            <img src="src/assets/pic1.jpg" alt="Project BACHPANSHALA education support" loading="lazy" />
             <div class="initiative-content">
               <h3>Project BACHPANSHALA</h3>
               <p>Bridging educational gaps by training underprivileged children through school education support, digital literacy and life skills development.</p>
@@ -82,7 +84,7 @@
           </article>
 
           <article class="initiative-card">
-            <img src="pic3.jpg" alt="Project JEEV animal welfare" loading="lazy" />
+            <img src="src/assets/pic3.jpg" alt="Project JEEV animal welfare" loading="lazy" />
             <div class="initiative-content">
               <h3>Project JEEV</h3>
               <p>Dedicated to animal welfare by feeding 50+ stray animals daily through a strong volunteer network.</p>
@@ -93,7 +95,7 @@
           </article>
 
           <article class="initiative-card">
-            <img src="pic2.jpg" alt="Project UDAAN women empowerment" loading="lazy" />
+            <img src="src/assets/pic2.jpg" alt="Project UDAAN women empowerment" loading="lazy" />
             <div class="initiative-content">
               <h3>Project UDAAN</h3>
               <p>Empowering women through collaboration with rural self-help groups while promoting financial independence, skill development and menstrual hygiene awareness.</p>
@@ -104,7 +106,7 @@
           </article>
 
           <article class="initiative-card">
-            <img src="pic4.jpeg" alt="Project PRAKRITI sustainability" loading="lazy" />
+            <img src="src/assets/pic4.jpeg" alt="Project PRAKRITI sustainability" loading="lazy" />
             <div class="initiative-content">
               <h3>Project PRAKRITI</h3>
               <p>Promoting sustainability and environmental conservation by planting 20,000+ saplings and supporting eco-friendly agricultural practices.</p>
@@ -115,7 +117,7 @@
           </article>
 
           <article class="initiative-card">
-            <img src="picc6.jpg" alt="Project VIKAS internship and training" loading="lazy" />
+            <img src="src/assets/pic11.png" alt="Project VIKAS internship and training" loading="lazy" />
             <div class="initiative-content">
               <h3>Project VIKAS</h3>
               <p>Facilitating employment and skill development through internships and professional training. Trained 30,000+ interns in data operations, finance, research, content writing, digital marketing and social work.</p>
@@ -124,6 +126,8 @@
               </div>
             </div>
           </article>
+          </div>
+          <button class="carousel-nav" type="button" data-initiatives-next aria-label="Show next initiative">&gt;</button>
         </div>
 
         <div class="initiatives-statement">
@@ -132,7 +136,7 @@
       </section>
 
       <section class="section about reveal" id="about">
-        <div class="about-image"><img src="src/assets/pic5.jpg" alt="InAmigos Foundation community activity" /></div>
+        <div class="about-image"><img src="src/assets/pic11.png" alt="InAmigos Foundation community activity" /></div>
         <div class="about-content">
           <h2>About <span>InAmigos Foundation</span></h2>
           <p>
@@ -151,17 +155,35 @@
 
       <section class="section gallery reveal" id="gallery">
         <div class="section-heading"><h2>Moments of Change</h2><span></span></div>
-        <div class="gallery-shell">
-          <span class="gallery-arrow" aria-hidden="true">&lt;</span>
+        <div class="gallery-shell" data-home-gallery>
+          <button class="gallery-arrow" type="button" data-gallery-prev aria-label="Show previous moment">&lt;</button>
           <div class="gallery-grid">
-            <img src="src/assets/pic1.jpg" alt="InAmigos Foundation gallery 1" />
-            <img src="src/assets/pic4.jpeg" alt="InAmigos Foundation gallery 2" />
-            <img src="src/assets/pic3.jpg" alt="InAmigos Foundation gallery 3" />
-            <img src="src/assets/hero.jpeg" alt="InAmigos Foundation gallery 4" />
-            <img src="src/assets/pic2.jpg" alt="InAmigos Foundation gallery 5" />
-            <img src="src/assets/pic5.jpg" alt="InAmigos Foundation gallery 6" />
+            <button class="gallery-thumb" type="button" data-gallery-index="0" aria-label="Preview InAmigos Foundation gallery 1">
+              <img src="src/assets/pic1.jpg" alt="InAmigos Foundation gallery 1" />
+              <span>Preview</span>
+            </button>
+            <button class="gallery-thumb" type="button" data-gallery-index="1" aria-label="Preview InAmigos Foundation gallery 2">
+              <img src="src/assets/pic4.jpeg" alt="InAmigos Foundation gallery 2" />
+              <span>Preview</span>
+            </button>
+            <button class="gallery-thumb" type="button" data-gallery-index="2" aria-label="Preview InAmigos Foundation gallery 3">
+              <img src="src/assets/pic3.jpg" alt="InAmigos Foundation gallery 3" />
+              <span>Preview</span>
+            </button>
+            <button class="gallery-thumb" type="button" data-gallery-index="3" aria-label="Preview InAmigos Foundation gallery 4">
+              <img src="src/assets/hero.jpeg" alt="InAmigos Foundation gallery 4" />
+              <span>Preview</span>
+            </button>
+            <button class="gallery-thumb" type="button" data-gallery-index="4" aria-label="Preview InAmigos Foundation gallery 5">
+              <img src="src/assets/pic2.jpg" alt="InAmigos Foundation gallery 5" />
+              <span>Preview</span>
+            </button>
+            <button class="gallery-thumb" type="button" data-gallery-index="5" aria-label="Preview InAmigos Foundation gallery 6">
+              <img src="src/assets/pic5.jpg" alt="InAmigos Foundation gallery 6" />
+              <span>Preview</span>
+            </button>
           </div>
-          <span class="gallery-arrow" aria-hidden="true">&gt;</span>
+          <button class="gallery-arrow" type="button" data-gallery-next aria-label="Show next moment">&gt;</button>
         </div>
       </section>
 
@@ -192,7 +214,7 @@
             <a href="https://www.linkedin.com/company/inamigos-foundation" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9H2v12h4V9Zm-2-2.8A2.2 2.2 0 1 0 4 1.8a2.2 2.2 0 0 0 0 4.4ZM22 21h-4v-6.3c0-1.7-.7-2.8-2.2-2.8-1.1 0-1.8.8-2.1 1.6-.1.3-.1.8-.1 1.2V21h-4V9h4v1.7c.5-.8 1.5-2 3.6-2 2.6 0 4.8 1.7 4.8 5.4V21Z" /></svg>
             </a>
-            <a href="https://youtube.com/@inamigosfoundation4296" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <a href="https://www.youtube.com/@inamigosfoundation" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.7 8.2a3 3 0 0 0-2.1-2.1C17.8 5.7 12 5.7 12 5.7s-5.8 0-7.6.4A3 3 0 0 0 2.3 8.2 31.6 31.6 0 0 0 2 12a31.6 31.6 0 0 0 .3 3.8 3 3 0 0 0 2.1 2.1c1.8.4 7.6.4 7.6.4s5.8 0 7.6-.4a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 22 12a31.6 31.6 0 0 0-.3-3.8ZM10 15.2V8.8L15.5 12 10 15.2Z" /></svg>
             </a>
           </div>
@@ -230,6 +252,15 @@
       </div>
       <p class="copyright">Copyright 2024 InAmigos Foundation. All Rights Reserved.</p>
     </footer>
-    <script type="module" src="script.js"></script>
+    <div class="gallery-lightbox" data-gallery-lightbox aria-hidden="true">
+      <button class="lightbox-close" type="button" data-lightbox-close aria-label="Close gallery preview">&times;</button>
+      <button class="lightbox-nav lightbox-prev" type="button" data-lightbox-prev aria-label="Previous image">&lt;</button>
+      <figure class="lightbox-frame">
+        <img src="src/assets/pic1.jpg" alt="InAmigos Foundation gallery preview" data-lightbox-image />
+        <figcaption data-lightbox-caption>InAmigos Foundation gallery 1</figcaption>
+      </figure>
+      <button class="lightbox-nav lightbox-next" type="button" data-lightbox-next aria-label="Next image">&gt;</button>
+    </div>
+    <script src="script.js"></script>
   </body>
 </html>

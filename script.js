@@ -180,45 +180,220 @@ if (document.querySelector('.gallery-item')) {
 }
 
 // ========================
+// Homepage Gallery Preview
+// ========================
+const homeGallery = document.querySelector('[data-home-gallery]');
+const galleryLightbox = document.querySelector('[data-gallery-lightbox]');
+
+if (homeGallery && galleryLightbox) {
+  const thumbs = Array.from(homeGallery.querySelectorAll('.gallery-thumb'));
+  const images = thumbs.map((thumb) => {
+    const img = thumb.querySelector('img');
+    return {
+      src: img.getAttribute('src'),
+      alt: img.getAttribute('alt')
+    };
+  });
+  const previewImage = galleryLightbox.querySelector('[data-lightbox-image]');
+  const previewCaption = galleryLightbox.querySelector('[data-lightbox-caption]');
+  const closeButton = galleryLightbox.querySelector('[data-lightbox-close]');
+  const prevButton = galleryLightbox.querySelector('[data-lightbox-prev]');
+  const nextButton = galleryLightbox.querySelector('[data-lightbox-next]');
+  const galleryPrev = homeGallery.querySelector('[data-gallery-prev]');
+  const galleryNext = homeGallery.querySelector('[data-gallery-next]');
+  let activeIndex = 0;
+
+  const updatePreview = (index) => {
+    activeIndex = (index + images.length) % images.length;
+    previewImage.src = images[activeIndex].src;
+    previewImage.alt = images[activeIndex].alt;
+    previewCaption.textContent = images[activeIndex].alt;
+    thumbs.forEach((thumb, thumbIndex) => {
+      thumb.classList.toggle('active', thumbIndex === activeIndex);
+    });
+  };
+
+  const openPreview = (index) => {
+    updatePreview(index);
+    galleryLightbox.classList.add('active');
+    galleryLightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    closeButton.focus();
+  };
+
+  const closePreview = () => {
+    galleryLightbox.classList.remove('active');
+    galleryLightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    thumbs[activeIndex]?.focus();
+  };
+
+  const movePreview = (direction) => {
+    updatePreview(activeIndex + direction);
+  };
+
+  const focusGalleryThumb = (direction) => {
+    updatePreview(activeIndex + direction);
+    thumbs[activeIndex]?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    thumbs[activeIndex]?.focus();
+  };
+
+  thumbs.forEach((thumb, index) => {
+    thumb.addEventListener('click', () => openPreview(index));
+  });
+
+  galleryPrev?.addEventListener('click', () => focusGalleryThumb(-1));
+  galleryNext?.addEventListener('click', () => focusGalleryThumb(1));
+  closeButton?.addEventListener('click', closePreview);
+  prevButton?.addEventListener('click', () => movePreview(-1));
+  nextButton?.addEventListener('click', () => movePreview(1));
+
+  galleryLightbox.addEventListener('click', (event) => {
+    if (event.target === galleryLightbox) closePreview();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (!galleryLightbox.classList.contains('active')) return;
+
+    if (event.key === 'Escape') closePreview();
+    if (event.key === 'ArrowLeft') movePreview(-1);
+    if (event.key === 'ArrowRight') movePreview(1);
+  });
+
+  updatePreview(0);
+}
+
+// ========================
+// Homepage Initiatives Left/Right Arrows
+// ========================
+(function() {
+  const track = document.querySelector('[data-initiatives-track]');
+  const prevBtn = document.querySelector('[data-initiatives-prev]');
+  const nextBtn = document.querySelector('[data-initiatives-next]');
+
+  if (!track || (!prevBtn && !nextBtn)) return;
+
+  const scrollStep = () => Math.round(track.clientWidth * 0.8);
+
+  prevBtn && prevBtn.addEventListener('click', () => {
+    track.scrollBy({ left: -scrollStep(), behavior: 'smooth' });
+  });
+
+  nextBtn && nextBtn.addEventListener('click', () => {
+    track.scrollBy({ left: scrollStep(), behavior: 'smooth' });
+  });
+
+  // keyboard support when track is focused
+  track.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') prevBtn && prevBtn.click();
+    if (e.key === 'ArrowRight') nextBtn && nextBtn.click();
+  });
+
+  // update step on resize
+  window.addEventListener('resize', () => {
+    // noop — scrollStep reads current width when used
+  });
+})();
+
+// ========================
 // Form Validation
 // ========================
 const contactForm = document.querySelector('form');
 if (contactForm) {
+  const feedback = contactForm.querySelector('.form-feedback');
+  const fields = {
+    name: contactForm.querySelector('#name'),
+    email: contactForm.querySelector('#email'),
+    subject: contactForm.querySelector('#subject'),
+    message: contactForm.querySelector('#message')
+  };
+
+  const setFieldError = (fieldName, message) => {
+    const field = fields[fieldName];
+    const error = contactForm.querySelector(`[data-error-for="${fieldName}"]`);
+    if (!field || !error) return;
+
+    field.classList.toggle('invalid', Boolean(message));
+    field.setAttribute('aria-invalid', message ? 'true' : 'false');
+    error.textContent = message;
+  };
+
+  const setFormFeedback = (message, type) => {
+    if (!feedback) return;
+    feedback.textContent = message;
+    feedback.className = `form-feedback show ${type}`;
+  };
+
+  const clearFormFeedback = () => {
+    if (!feedback) return;
+    feedback.textContent = '';
+    feedback.className = 'form-feedback';
+  };
+
+  const validateContactForm = () => {
+    let firstInvalidField = null;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    Object.keys(fields).forEach(fieldName => setFieldError(fieldName, ''));
+    clearFormFeedback();
+
+    if (!fields.name.value.trim()) {
+      setFieldError('name', 'Please enter your name.');
+      firstInvalidField = firstInvalidField || fields.name;
+    }
+
+    if (!emailPattern.test(fields.email.value.trim())) {
+      setFieldError('email', 'Please enter a valid email address.');
+      firstInvalidField = firstInvalidField || fields.email;
+    }
+
+    if (!fields.subject.value.trim()) {
+      setFieldError('subject', 'Please enter a subject.');
+      firstInvalidField = firstInvalidField || fields.subject;
+    }
+
+    if (!fields.message.value.trim()) {
+      setFieldError('message', 'Please enter your message.');
+      firstInvalidField = firstInvalidField || fields.message;
+    }
+
+    if (firstInvalidField) {
+      setFormFeedback('Please fix the highlighted fields before sending your message.', 'error');
+      firstInvalidField.focus();
+      return false;
+    }
+
+    return true;
+  };
+
+  Object.entries(fields).forEach(([fieldName, field]) => {
+    field.addEventListener('input', () => {
+      if (field.classList.contains('invalid')) {
+        setFieldError(fieldName, '');
+      }
+      if (feedback?.classList.contains('error')) {
+        clearFormFeedback();
+      }
+    });
+  });
+
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    
-    const name = contactForm.querySelector('#name');
-    const email = contactForm.querySelector('#email');
-    const message = contactForm.querySelector('#message');
-    
-    // Basic validation
-    if (!name.value.trim()) {
-      showNotification('Please enter your name', 'error');
-      name.focus();
+
+    if (!validateContactForm()) {
       return;
     }
-    
-    if (!email.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      showNotification('Please enter a valid email', 'error');
-      email.focus();
-      return;
-    }
-    
-    if (!message.value.trim()) {
-      showNotification('Please enter a message', 'error');
-      message.focus();
-      return;
-    }
-    
+
     // Simulate submission
     const submitBtn = contactForm.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Sending...';
     submitBtn.disabled = true;
-    
+
     setTimeout(() => {
-      showNotification('Message sent successfully! We\'ll get back to you soon.', 'success');
+      setFormFeedback('Message sent successfully. Thank you for contacting InAmigos Foundation. We will get back to you soon.', 'success');
       contactForm.reset();
+      Object.keys(fields).forEach(fieldName => setFieldError(fieldName, ''));
       submitBtn.textContent = originalText;
       submitBtn.disabled = false;
     }, 1500);

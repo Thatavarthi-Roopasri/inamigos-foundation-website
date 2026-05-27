@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us UX/UI Improvement Analysis</title>
+    <style>
+      :root {
+        --green: #2e8b57;
+        --deep-green: #0d4c2d;
+        --soft-green: #eef7ef;
+        --line: #dfe8df;
+        --text: #18221b;
+        --muted: #637067;
+        --white: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        background: var(--white);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .analysis-board {
+        min-height: 100vh;
+        padding: 34px clamp(20px, 4vw, 54px) 48px;
+        background:
+          linear-gradient(90deg, rgba(46, 139, 87, 0.06) 1px, transparent 1px),
+          linear-gradient(rgba(46, 139, 87, 0.06) 1px, transparent 1px),
+          var(--white);
+        background-size: 34px 34px;
+      }
+
+      .board-heading {
+        max-width: 1120px;
+        margin: 0 auto 26px;
+        text-align: center;
+      }
+
+      .board-heading p {
+        margin: 0 0 8px;
+        color: var(--green);
+        font-size: 0.82rem;
+        font-weight: 850;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .board-heading h1 {
+        margin: 0;
+        font-size: clamp(1.9rem, 4vw, 3rem);
+        line-height: 1.08;
+      }
+
+      .board-canvas {
+        position: relative;
+        width: min(1280px, 100%);
+        min-height: 950px;
+        margin: 0 auto;
+      }
+
+      .screenshot-shell {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 794px;
+        height: 930px;
+        overflow: hidden;
+        background: var(--white);
+        border: 1px solid var(--line);
+        box-shadow: 0 22px 54px rgba(13, 76, 45, 0.14);
+        transform: translateX(-50%);
+      }
+
+      .screenshot-label {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        z-index: 2;
+        padding: 8px 12px;
+        color: var(--deep-green);
+        background: rgba(255, 255, 255, 0.94);
+        border: 1px solid rgba(46, 139, 87, 0.18);
+        border-radius: 6px;
+        font-size: 0.78rem;
+        font-weight: 850;
+      }
+
+      .contact-preview {
+        width: 1280px;
+        height: 1500px;
+        border: 0;
+        pointer-events: none;
+        transform: scale(0.62);
+        transform-origin: top left;
+      }
+
+      .annotation {
+        position: absolute;
+        z-index: 3;
+        width: 292px;
+        padding: 20px 22px;
+        background: var(--white);
+        border: 2px solid var(--green);
+        border-left-width: 8px;
+        border-radius: 8px;
+        box-shadow: 0 18px 38px rgba(13, 76, 45, 0.16);
+      }
+
+      .annotation strong {
+        display: block;
+        margin-bottom: 10px;
+        color: var(--deep-green);
+        font-size: 1.05rem;
+        line-height: 1.25;
+      }
+
+      .annotation p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.94rem;
+        line-height: 1.55;
+      }
+
+      .annotation-one {
+        left: 0;
+        top: 640px;
+      }
+
+      .annotation-two {
+        right: 0;
+        top: 278px;
+      }
+
+      .annotation-arrows {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .annotation-arrows path {
+        fill: none;
+        stroke: var(--green);
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      @media (max-width: 1180px) {
+        .board-canvas {
+          display: grid;
+          gap: 18px;
+          min-height: 0;
+        }
+
+        .screenshot-shell,
+        .annotation {
+          position: static;
+        }
+
+        .screenshot-shell {
+          justify-self: center;
+          max-width: 100%;
+          transform: none;
+        }
+
+        .annotation {
+          width: min(794px, 100%);
+          justify-self: center;
+        }
+
+        .annotation-arrows {
+          display: none;
+        }
+
+        .annotation::after {
+          position: absolute;
+          left: 50%;
+          width: 3px;
+          height: 34px;
+          content: "";
+          background: var(--green);
+          transform: translateX(-50%);
+        }
+
+        .annotation::before {
+          position: absolute;
+          left: 50%;
+          width: 0;
+          height: 0;
+          content: "";
+          transform: translateX(-50%);
+        }
+
+        .annotation-one::after {
+          bottom: -36px;
+        }
+
+        .annotation-one::before {
+          bottom: -48px;
+          border-top: 14px solid var(--green);
+          border-right: 9px solid transparent;
+          border-left: 9px solid transparent;
+        }
+
+        .annotation-two::after {
+          top: -36px;
+        }
+
+        .annotation-two::before {
+          top: -48px;
+          border-right: 9px solid transparent;
+          border-bottom: 14px solid var(--green);
+          border-left: 9px solid transparent;
+        }
+      }
+
+      @media (max-width: 860px) {
+        .screenshot-shell {
+          width: 100%;
+          height: 760px;
+        }
+
+        .contact-preview {
+          transform: scale(0.5);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="analysis-board" aria-labelledby="analysis-title">
+      <header class="board-heading">
+        <p>UX/UI Improvement Analysis</p>
+        <h1 id="analysis-title">Contact Us Page</h1>
+      </header>
+
+      <section class="board-canvas" aria-label="Contact Us screenshot with two UX improvement annotations">
+        <article class="annotation annotation-one">
+          <strong>Improve Form Validation &amp; User Feedback</strong>
+          <p>Add validation messages and confirmation feedback after submission to improve user experience.</p>
+        </article>
+
+        <div class="screenshot-shell" aria-label="Unchanged Contact Us page screenshot preview">
+          <span class="screenshot-label">Existing Contact Us Page</span>
+          <iframe class="contact-preview" src="contact.html" title="Existing Contact Us page unchanged" tabindex="-1"></iframe>
+        </div>
+
+        <article class="annotation annotation-two">
+          <strong>Add Interactive Contact Features</strong>
+          <p>Make email clickable and integrate location access for easier communication and accessibility.</p>
+        </article>
+
+        <svg class="annotation-arrows" viewBox="0 0 1280 950" aria-hidden="true">
+          <defs>
+            <marker id="arrowhead" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+              <path d="M 0 0 L 12 6 L 0 12 z" fill="#2e8b57"></path>
+            </marker>
+          </defs>
+          <path d="M 292 708 C 410 700, 470 756, 548 806" marker-end="url(#arrowhead)"></path>
+          <path d="M 988 356 C 902 350, 850 398, 760 426" marker-end="url(#arrowhead)"></path>
+        </svg>
+      </section>
+    </main>
+  </body>
+</html>
